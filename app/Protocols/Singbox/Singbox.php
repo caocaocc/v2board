@@ -25,6 +25,12 @@ class Singbox
         $this->config['outbounds'] = $outbounds;
         $user = $this->user;
 
+        array_walk_recursive($this->config, function (&$value) use ($appName) {
+            if ($value === '$app_name') {
+                $value = $appName;
+            }
+        });
+
         return response(json_encode($this->config, JSON_UNESCAPED_SLASHES), 200)
             ->header('Content-Type', 'application/json')
             ->header('subscription-userinfo', "upload={$user['u']}; download={$user['d']}; total={$user['transfer_enable']}; expire={$user['expired_at']}")
@@ -45,7 +51,7 @@ class Singbox
     protected function buildProxies()
     {
         $proxies = [];
-    
+
         foreach ($this->servers as $item) {
             if ($item['type'] === 'v2node') {
                 $item['type'] = $item['protocol'];
@@ -85,15 +91,15 @@ class Singbox
                     break;
             }
         }
-    
+
         return $proxies;
     }
 
     protected function addProxies($proxies)
     {
         foreach ($this->config['outbounds'] as &$outbound) {
-            if (($outbound['type'] === 'selector' && $outbound['tag'] === '节点选择') || ($outbound['type'] === 'urltest' && $outbound['tag'] === '自动选择') || ($outbound['type'] === 'selector' && strpos($outbound['tag'], '#') === 0 )) {
-                array_push($outbound['outbounds'], ...array_column($proxies, 'tag'));
+            if (($outbound['type'] === 'selector') || ($outbound['type'] === 'urltest' && $outbound['tag'] === '自动选择') || ($outbound['type'] === 'selector' && strpos($outbound['tag'], '#') === 0 )) {
+                array_unshift($outbound['outbounds'], ...array_column($proxies, 'tag'));
             }
         }
         unset($outbound);
@@ -251,7 +257,7 @@ class Singbox
         return $array;
     }
 
-    protected function buildTrojan($password, $server) 
+    protected function buildTrojan($password, $server)
     {
         $array = [];
         $array['tag'] = $server['name'];
@@ -343,7 +349,7 @@ class Singbox
     {
         $parts = array_map('trim', explode(',', $server['port']));
         $portConfig = [];
-        
+
         // 检查是否为单端口
         if (count($parts) === 1 && !str_contains($parts[0], '-')) {
             $port = (int)$parts[0];

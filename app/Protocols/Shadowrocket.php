@@ -24,9 +24,10 @@ class Shadowrocket
         //display remaining traffic and expire date
         $upload = round($user['u'] / (1024*1024*1024), 2);
         $download = round($user['d'] / (1024*1024*1024), 2);
+        $useTraffic = $upload + $download;
         $totalTraffic = round($user['transfer_enable'] / (1024*1024*1024), 2);
         $expiredDate = date('Y-m-d', $user['expired_at']);
-        $uri .= "STATUS=🚀↑:{$upload}GB,↓:{$download}GB,TOT:{$totalTraffic}GB💡Expires:{$expiredDate}\r\n";
+        $uri .= "STATUS=流量:{$useTraffic}GB / {$totalTraffic}GB  到期时间:{$expiredDate}\r\n";
 
         foreach ($this->servers as $server) {
             if ($server['type'] === 'vmess' || ($server['type'] === 'v2node' && $server['protocol'] === 'vmess')) {

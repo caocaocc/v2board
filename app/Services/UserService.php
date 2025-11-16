@@ -139,24 +139,23 @@ class UserService
             case ($plan->reset_traffic_method === 4): {
                 return 365;
             }
-        }    
+        }
         return null;
     }
 
     public function isAvailable(User $user)
     {
-        if (!$user->banned && $user->transfer_enable && ($user->expired_at > time() || $user->expired_at === NULL)) {
-            return true;
-        }
-        return false;
+        return !$user->banned
+            && $user->transfer_enable > 0
+            && ($user->expired_at > 0 || $user->expired_at === null);
     }
 
     public function getAvailableUsers()
     {
-        return User::whereRaw('u + d < transfer_enable')
+        return User::where('transfer_enable', '>', 0)
             ->where(function ($query) {
-                $query->where('expired_at', '>=', time())
-                ->orWhereNull('expired_at');
+                $query->where('expired_at', '>', 0)
+                      ->orWhereNull('expired_at');
             })
             ->where('banned', 0)
             ->get();
@@ -164,29 +163,27 @@ class UserService
 
     public function getDeviceLimitedUsers()
     {
-        return User::whereRaw('u + d < transfer_enable')
+        return User::where('transfer_enable', '>', 0)
             ->where(function ($query) {
-                $query->where('expired_at', '>=', time())
-                ->orWhereNull('expired_at');
+                $query->where('expired_at', '>', 0)
+                      ->orWhereNull('expired_at');
             })
             ->where('banned', 0)
-            ->where('device_limit','>', 0)
+            ->where('device_limit', '>', 0)
             ->select('id')
             ->get();
     }
 
-    public function getUnAvailbaleUsers()
+    public function getUnavailableUsers()
     {
         return User::where(function ($query) {
-            $query->where('expired_at', '<', time())
-                ->orWhere('expired_at', 0);
-        })
-            ->where(function ($query) {
-            $query->where('plan_id', NULL)
-                ->orWhere('transfer_enable', 0);
-        })
+                $query->where('transfer_enable', 0)
+                      ->orWhere('expired_at', 0)
+                      ->orWhereNull('plan_id');
+            })
             ->get();
     }
+
 
     public function getUsersByIds($ids)
     {

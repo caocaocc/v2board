@@ -51,6 +51,11 @@ class Surge
                 $proxies .= self::buildHysteria($user['uuid'], $item);
                 // [Proxy Group]
                 $proxyGroup .= $item['name'] . ', ';
+            }elseif ($item['type'] === 'tuic') {
+                // [Proxy]
+                $proxies .= self::buildTuic($user['uuid'], $item);
+                // [Proxy Group]
+                $proxyGroup .= $item['name'] . ', ';
             }
         }
 
@@ -70,13 +75,14 @@ class Surge
         $config = str_replace('$subs_domain', $subsDomain, $config);
         $config = str_replace('$proxies', $proxies, $config);
         $config = str_replace('$proxy_group', rtrim($proxyGroup, ', '), $config);
+        $config = str_replace('$app_name', $appName, $config);
 
         $upload = round($user['u'] / (1024*1024*1024), 2);
         $download = round($user['d'] / (1024*1024*1024), 2);
         $useTraffic = $upload + $download;
         $totalTraffic = round($user['transfer_enable'] / (1024*1024*1024), 2);
         $expireDate = $user['expired_at'] === NULL ? '长期有效' : date('Y-m-d H:i:s', $user['expired_at']);
-        $subscribeInfo = "title={$appName}订阅信息, content=上传流量：{$upload}GB\\n下载流量：{$download}GB\\n剩余流量：{$useTraffic}GB\\n套餐流量：{$totalTraffic}GB\\n到期时间：{$expireDate}";
+        $subscribeInfo = "title={$appName}订阅信息, content=上传流量：{$upload}GB\\n下载流量：{$download}GB\\n已用流量：{$useTraffic}GB\\n套餐流量：{$totalTraffic}GB\\n到期时间：{$expireDate}";
         $config = str_replace('$subscribe_info', $subscribeInfo, $config);
 
         return $config;
@@ -148,7 +154,7 @@ class Surge
                     array_push($config, "ws-path={$wsSettings['path']}");
                 if (isset($wsSettings['headers']['Host']) && !empty($wsSettings['headers']['Host']))
                     array_push($config, "ws-headers=Host:{$wsSettings['headers']['Host']}");
-                if (isset($wsSettings['security'])) 
+                if (isset($wsSettings['security']))
                     array_push($config, "encrypt-method={$wsSettings['security']}");
             }
         }
@@ -207,12 +213,38 @@ class Surge
             "password={$password}",
             "download-bandwidth={$server['up_mbps']}",
             $server['server_name'] ? "sni={$server['server_name']}" : "",
-            // 'tfo=true', 
+            // 'tfo=true',
             'udp-relay=true'
         ];
         if (!empty($server['insecure'])) {
             array_push($config, $server['insecure'] ? 'skip-cert-verify=true' : 'skip-cert-verify=false');
         }
+        $config = array_filter($config);
+        $uri = implode(',', $config);
+        $uri .= "\r\n";
+        return $uri;
+    }
+
+    public static function buildTuic($password, $server)
+    {
+        $config = [
+            "{$server['name']}=tuic-v5",
+            "{$server['host']}",
+            "{$server['port']}",
+            "uuid={$password}",
+            "password={$password}",
+            "alpn=h3",
+            "disable-sni=" . ($server['disable_sni'] ? 'true' : 'false'),
+            "reduce-rtt=" . ($server['zero_rtt_handshake'] ? 'true' : 'false'),
+            "udp-relay-mode=" . ($server['udp_relay_mode'] ?? 'native'),
+            "congestion-controller=" . ($server['congestion_control'] ?? 'cubic'),
+            "skip-cert-verify=" . ($server['insecure'] ? 'true' : 'false'),
+        ];
+
+        if (isset($server['server_name'])) {
+            $config[] = "sni={$server['server_name']}";
+        }
+
         $config = array_filter($config);
         $uri = implode(',', $config);
         $uri .= "\r\n";

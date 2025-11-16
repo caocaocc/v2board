@@ -89,10 +89,10 @@ class Stash
         });
         $config['proxy-groups'] = array_values($config['proxy-groups']);
         // Force the current subscription domain to be a direct rule
-        $subsDomain = $_SERVER['HTTP_HOST'];
-        if ($subsDomain) {
-            array_unshift($config['rules'], "DOMAIN,{$subsDomain},DIRECT");
-        }
+        // $subsDomain = $_SERVER['HTTP_HOST'];
+        // if ($subsDomain) {
+        //     array_unshift($config['rules'], "DOMAIN,{$subsDomain},DIRECT");
+        // }
 
         $yaml = Yaml::dump($config, 2, 4, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
         $yaml = str_replace('$app_name', config('v2board.app_name', 'V2Board'), $yaml);
@@ -252,7 +252,7 @@ class Stash
 
         return $array;
     }
-    
+
     public static function buildTrojan($password, $server)
     {
         $array = [];
@@ -324,7 +324,7 @@ class Stash
         $array['port'] = (int)$firstPort;
         if (count($parts) !== 1 || strpos($parts[0], '-') !== false) {
             $array['ports'] = $server['port'];
-            $array['mport'] = $server['port'];   
+            $array['mport'] = $server['port'];
         }
         $array['udp'] = true;
         $array['skip-cert-verify'] = $server['insecure'] == 1 ? true : false;
@@ -349,6 +349,7 @@ class Stash
             $array['down'] = $server['up_mbps'];
             $array['protocol'] = 'udp';
         }
+        $array['fast-open'] = true;
 
         return $array;
     }

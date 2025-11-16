@@ -64,16 +64,34 @@ class ClientController extends Controller
         $expiredDate = $user['expired_at'] ? date('Y-m-d', $user['expired_at']) : '长期有效';
         $userService = new UserService();
         $resetDay = $userService->getResetDay($user);
-        array_unshift($servers, array_merge($servers[0], [
-            'name' => "套餐到期：{$expiredDate}",
+        $isExpired = $user['expired_at'] && $user['expired_at'] <= time();
+        $speedLimit = null;
+        if ($isExpired) {
+            $speedLimit = '‼️ 限速：384 KB/s';
+        } elseif ($useTraffic >= $totalTraffic) {
+            $speedLimit = '‼️ 限速：1024 KB/s';
+        }
+        array_push($servers, array_merge($servers[0], [
+            'name' => "剩余流量：{$remainingTraffic}",
         ]));
         if ($resetDay) {
-            array_unshift($servers, array_merge($servers[0], [
-                'name' => "距离下次重置剩余：{$resetDay} 天",
+            array_push($servers, array_merge($servers[0], [
+                'name' => "重置流量：剩余 {$resetDay} 天",
             ]));
         }
-        array_unshift($servers, array_merge($servers[0], [
-            'name' => "剩余流量：{$remainingTraffic}",
+        array_push($servers, array_merge($servers[0], [
+            'name' => "套餐到期：{$expiredDate}",
+        ]));
+        if ($speedLimit !== null) {
+            array_push($servers, array_merge($servers[0], [
+                'name' => "{$speedLimit}",
+            ]));
+        }
+        array_push($servers, array_merge($servers[0], [
+            'name' => "官网：www.hidder.org",
+        ]));
+        array_push($servers, array_merge($servers[0], [
+            'name' => "邮箱：help@hidder.org",
         ]));
     }
 }
