@@ -111240,7 +111240,9 @@
             }
             save() {
                 var e = u()({}, this.state.route);
-                if (Array.isArray(e.match)) {
+                if ("route_any" === e.action) {
+                    e.match = "string" === typeof e.match ? e.match : "";
+                } else if (Array.isArray(e.match)) {
                     e.match = e.match.filter(e=>!!e);
                 } else if (e.match && "string" === typeof e.match) {
                     e.match = e.match.split(",").filter(e=>!!e);
@@ -111313,19 +111315,19 @@
                             return "1\n2\n3-9";
                         }
                         if (action === "route_any") {
-                            return "\"domain\":[\"baidu.com\",\"qq.com\",\"geosite:cn\"]\n\"ip\":[\"0.0.0.0/8\",\"10.0.0.0/8\",\"fc00::/7\",\"fe80::/10\",\"geoip:cn\"]\n\"port\":\"53,443,1000-2000\"\n\"sourcePort\":\"53,443,1000-2000\"\n\"localPort\":\"53,443,1000-2000\"\n\"network\":\"tcp\"\n\"sourceIP\":[\"10.0.0.1\"]\n\"localIP\":[\"192.168.0.25\"]\n\"user\":[\"love@xray.com\"]\n\"vlessRoute\":\"1,2,3-9\"\n\"protocol\":[\"bittorrent\"]\n\"attrs\":{\":method\":\"GET\"}\n\"process\":[\"curl\"]\n\"ruleTag\":\"rule name\"";
+                            return "{\n\"domain\":[\"baidu.com\",\"qq.com\",\"geosite:cn\"],\n\"ip\":[\"0.0.0.0/8\",\"10.0.0.0/8\",\"fc00::/7\",\"fe80::/10\",\"geoip:cn\"],\n\"port\":\"53,443,1000-2000\",\n\"sourcePort\":\"53,443,1000-2000\",\n\"localPort\":\"53,443,1000-2000\",\n\"network\":\"tcp\",\n\"sourceIP\":[\"10.0.0.1\"],\n\"localIP\":[\"192.168.0.25\"],\n\"user\":[\"love@xray.com\"],\n\"vlessRoute\":\"1,2,3-9\",\n\"protocol\":[\"bittorrent\"],\n\"attrs\":{\":method\":\"GET\"},\n\"process\":[\"curl\"],\n\"ruleTag\":\"rule name\"\n}";
                         }
                         if (["route_ip", "block_ip"].includes(action)) {
                             return "127.0.0.1(\u5355\u4e00\u5339\u914d)\n10.0.0.0/8(\u8303\u56f4\u5339\u914d)\ngeoip:cn(\u9884\u5b9a\u4e49\u5217\u8868\u5339\u914d)";
                         }
                         return "example.com(\u5173\u952e\u5b57\u5339\u914d)\ndomain:example.com(\u5b50\u57df\u540d\u5339\u914d)\ngeosite:netflix(\u9884\u5b9a\u4e49\u57df\u540d\u5217\u8868)";
                     })(),
-                    value: "object" === typeof this.state.route.match ? null === (e = this.state.route.match) || void 0 === e ? void 0 : e.join("\n") : null === (t = this.state.route.match) || void 0 === t ? void 0 : null === (n = t.split(",")) || void 0 === n ? void 0 : n.join("\n"),
+                    value: "route_any" === this.state.route.action ? this.state.route.match : "object" === typeof this.state.route.match ? null === (e = this.state.route.match) || void 0 === e ? void 0 : e.join("\n") : null === (t = this.state.route.match) || void 0 === t ? void 0 : null === (n = t.split(",")) || void 0 === n ? void 0 : n.join("\n"),
                     onChange: e=>{
                         var t;
                         this.setState({
                             route: u()({}, this.state.route, {
-                                match: null === (t = e.target.value) || void 0 === t ? void 0 : t.split("\n")
+                                match: "route_any" === this.state.route.action ? e.target.value : null === (t = e.target.value) || void 0 === t ? void 0 : t.split("\n")
                             })
                         })
                     }

@@ -434,6 +434,18 @@ class ServerService
         $routeIds = array_map('intval', $routeIds);
         $routes = ServerRoute::select(['id', 'match', 'action', 'action_value'])->whereIn('id', $routeIds)->get();
         foreach ($routes as $k => $route) {
+            if ($route->action === 'route_any' && is_string($route->match)) {
+                $trimmed = ltrim($route->match);
+                if ($trimmed !== '' && $trimmed[0] === '[') {
+                    $array = json_decode($route->match, true);
+                    if (is_array($array)) {
+                        $routes[$k]['match'] = $array;
+                        continue;
+                    }
+                }
+                $routes[$k]['match'] = preg_split("/\\r?\\n/", $route->match);
+                continue;
+            }
             $array = json_decode($route->match, true);
             if (is_array($array)) $routes[$k]['match'] = $array;
         }
