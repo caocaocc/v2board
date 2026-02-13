@@ -244,18 +244,21 @@ class ServerService
 
     public function getAvailableUsers($groupId)
     {
+        $now = time();
+
         return User::whereIn('group_id', $groupId)
-            ->whereRaw('u + d < transfer_enable')
+            ->where('transfer_enable', '>', 0)
             ->where(function ($query) {
-                $query->where('expired_at', '>=', time())
-                    ->orWhere('expired_at', NULL);
+                $query->where('expired_at', '>', 0)
+                    ->orWhereNull('expired_at');
             })
             ->where('banned', 0)
+            ->whereNotNull('plan_id')
             ->select([
                 'id',
                 'uuid',
-                'speed_limit',
-                'device_limit'
+                'device_limit',
+                \DB::raw("CASE WHEN (expired_at IS NOT NULL AND expired_at < {$now}) THEN 3 WHEN ((u + d) >= transfer_enable) THEN 8 ELSE speed_limit END AS speed_limit")
             ])
             ->get();
     }

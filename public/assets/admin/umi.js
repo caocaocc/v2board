@@ -12651,6 +12651,19 @@
                     style: {
                         width: "100%"
                     },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
+                    },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e : null)
                 }, u.map(e=>{
                     return d.a.createElement(a["a"].Option, {
@@ -28337,6 +28350,19 @@
                     placeholder: "\u8bf7\u9009\u62e9\u8def\u7531\u7ec4",
                     style: {
                         width: "100%"
+                    },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
                     },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e : null)
                 }, c.map(e=>{
@@ -100727,6 +100753,9 @@
                 dns: "\u6307\u5b9aDNS\u670d\u52a1\u5668\u8fdb\u884c\u89e3\u6790",
                 route: "\u6307\u5b9a\u51fa\u7ad9\u670d\u52a1\u5668(\u57df\u540d\u76ee\u6807)",
                 route_ip: "\u6307\u5b9a\u51fa\u7ad9\u670d\u52a1\u5668(IP\u76ee\u6807)",
+                route_user: "\u6307\u5b9a\u51fa\u7ad9\u670d\u52a1\u5668(\u7528\u6237\u76ee\u6807)",
+                route_vlessRoute: "\u6307\u5b9a\u51fa\u7ad9\u670d\u52a1\u5668(vlessRoute)",
+                route_any: "\u6307\u5b9a\u51fa\u7ad9\u670d\u52a1\u5668(\u4efb\u610f\u89c4\u5219)",
                 default_out: "\u81ea\u5b9a\u4e49\u9ed8\u8ba4\u51fa\u7ad9"
             }
         }
@@ -104604,6 +104633,19 @@
                     style: {
                         width: "100%"
                     },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
+                    },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e : null)
                 }, i.map(e=>{
                     return y.a.createElement(N["a"].Option, {
@@ -105275,6 +105317,19 @@
                     style: {
                         width: "100%"
                     },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
+                    },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e : null)
                 }, i.map(e=>{
                     return y.a.createElement(N["a"].Option, {
@@ -105612,6 +105667,19 @@
                     style: {
                         width: "100%"
                     },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
+                    },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e: null)
                 },
                 i.map(e=>{
@@ -105907,6 +105975,19 @@
                     placeholder: "\u8bf7\u9009\u62e9\u8def\u7531\u7ec4",
                     style: {
                         width: "100%"
+                    },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
                     },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e: null)
                 },
@@ -106564,6 +106645,19 @@
                     placeholder: "\u8bf7\u9009\u62e9\u8def\u7531\u7ec4",
                     style: {
                         width: "100%"
+                    },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
                     },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e: null)
                 },
@@ -111212,6 +111306,15 @@
                         if (action === "block_port") {
                             return "53\n443\n1000-2000";
                         }
+                        if (action === "route_user") {
+                            return "[https://api.example.com]-vless:1|xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+                        }
+                        if (action === "route_vlessRoute") {
+                            return "1\n2\n3-9";
+                        }
+                        if (action === "route_any") {
+                            return "\"domain\":[\"baidu.com\",\"qq.com\",\"geosite:cn\"]\n\"ip\":[\"0.0.0.0/8\",\"10.0.0.0/8\",\"fc00::/7\",\"fe80::/10\",\"geoip:cn\"]\n\"port\":\"53,443,1000-2000\"\n\"sourcePort\":\"53,443,1000-2000\"\n\"localPort\":\"53,443,1000-2000\"\n\"network\":\"tcp\"\n\"sourceIP\":[\"10.0.0.1\"]\n\"localIP\":[\"192.168.0.25\"]\n\"user\":[\"love@xray.com\"]\n\"vlessRoute\":\"1,2,3-9\"\n\"protocol\":[\"bittorrent\"]\n\"attrs\":{\":method\":\"GET\"}\n\"process\":[\"curl\"]\n\"ruleTag\":\"rule name\"";
+                        }
                         if (["route_ip", "block_ip"].includes(action)) {
                             return "127.0.0.1(\u5355\u4e00\u5339\u914d)\n10.0.0.0/8(\u8303\u56f4\u5339\u914d)\ngeoip:cn(\u9884\u5b9a\u4e49\u5217\u8868\u5339\u914d)";
                         }
@@ -111256,6 +111359,12 @@
                 }, b["a"].routeActionText["route"]), f.a.createElement(v["a"].Option, {
                     value: "route_ip"
                 }, b["a"].routeActionText["route_ip"]), f.a.createElement(v["a"].Option, {
+                    value: "route_user"
+                }, b["a"].routeActionText["route_user"]), f.a.createElement(v["a"].Option, {
+                    value: "route_vlessRoute"
+                }, b["a"].routeActionText["route_vlessRoute"]), f.a.createElement(v["a"].Option, {
+                    value: "route_any"
+                }, b["a"].routeActionText["route_any"]), f.a.createElement(v["a"].Option, {
                     value: "default_out"
                 }, b["a"].routeActionText["default_out"])))), "dns" === this.state.route.action && f.a.createElement("div", {
                     className: "form-group"
@@ -111271,7 +111380,7 @@
                             })
                         })
                     }
-                })), ("route" === this.state.route.action || "route_ip"=== this.state.route.action || "default_out"=== this.state.route.action) && f.a.createElement("div", {
+                })), ("route" === this.state.route.action || "route_ip"=== this.state.route.action || "route_user"=== this.state.route.action || "route_vlessRoute"=== this.state.route.action || "route_any"=== this.state.route.action || "default_out"=== this.state.route.action) && f.a.createElement("div", {
                     className: "form-group"
                 }, f.a.createElement("label", {
                     for: "example-text-input-alt"
@@ -113725,6 +113834,19 @@
                     placeholder: "\u8bf7\u9009\u62e9\u8def\u7531\u7ec4",
                     style: {
                         width: "100%"
+                    },
+                    dropdownClassName: "v2board-route-group-dropdown",
+                    dropdownAlign: {
+                        points: ["bl", "tl"],
+                        offset: [0, -4],
+                        overflow: {
+                            adjustX: 0,
+                            adjustY: 0
+                        }
+                    },
+                    dropdownStyle: {
+                        maxHeight: 720,
+                        overflowY: "auto"
                     },
                     onChange: e=>this.formChange("route_id", e.length > 0 ? e : null)
                 }, u.map(e=>{

@@ -605,7 +605,7 @@ CREATE TABLE `v2_server_route` (
                                    `id` int(11) NOT NULL AUTO_INCREMENT,
                                    `remarks` varchar(255) NOT NULL,
                                    `match` varchar(255) NOT NULL,
-                                   `action` varchar(11) NOT NULL,
+                                   `action` varchar(32) NOT NULL,
                                    `action_value` varchar(255) DEFAULT NULL,
                                    `created_at` int(11) NOT NULL,
                                    `updated_at` int(11) NOT NULL,
@@ -856,3 +856,6 @@ CREATE TABLE `v2_server_v2node` (
 
 ALTER TABLE `v2_server_route`
 CHANGE `action_value` `action_value` text NULL AFTER `action`;
+
+ALTER TABLE `v2_server_route`
+CHANGE `action` `action` varchar(32) NOT NULL AFTER `match`;

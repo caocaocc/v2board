@@ -291,7 +291,7 @@ CREATE TABLE `v2_server_route` (
                                    `id` int(11) NOT NULL AUTO_INCREMENT,
                                    `remarks` varchar(255) NOT NULL,
                                    `match` text NOT NULL,
-                                   `action` varchar(11) NOT NULL,
+                                   `action` varchar(32) NOT NULL,
                                    `action_value` text DEFAULT NULL,
                                    `created_at` int(11) NOT NULL,
                                    `updated_at` int(11) NOT NULL,
